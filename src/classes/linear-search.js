@@ -15,6 +15,8 @@ export class LinearSearch {
 	}
 
 	contains(value) {
+		value = value.toLowerCase();
+
 		for (const item of this.array) {
 			if (item === value) {
 				return true;
@@ -25,6 +27,8 @@ export class LinearSearch {
 	}
 
 	search(value, limit = 10) {
+		value = value.toLowerCase();
+
 		const result = [];
 		for (const item of this.array) {
 			if (result.length >= limit) {

@@ -1,7 +1,7 @@
 <template>
 	<header class="navbar container mx-auto px-4 pt-5">
 		<div class="navbar-start gap-2">
-			<v-icon name="bi-book" class="text-2xl text-blue-500" />
+			<v-icon name="bi-book" class="text-blue-500 pt-1" scale="2" />
 			<span class="self-center text-2xl font-semibold whitespace-nowrap hover:text-blue-500 transition-colors hidden lg:block">Word Finder</span>
 			<span class="text-pretty text-sm text-gray-500 hidden lg:block pt-2">
 				by <a href="https://kyrie25.dev" target="_blank" class="text-blue-500">kyrie25</a>
