@@ -8,7 +8,7 @@
 				rel="noreferrer noopener"
 				target="_blank"
 			>
-				{process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.slice(0, 7)}
+				{{ commit.slice(0, 7) }}
 			</a>
 			<span v-else>local</span>
 		</code>
@@ -18,6 +18,5 @@
 
 <script setup>
 // Get process.env from Vite
-
-const commit = import.meta.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA;
+const commit = import.meta.env.VITE_VERCEL_GIT_COMMIT_SHA;
 </script>
