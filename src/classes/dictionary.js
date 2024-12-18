@@ -4,6 +4,7 @@ export class Dictionary {
 	}
 
 	contains(word) {
+		word = word.toLowerCase();
 		return this.items.includes(word);
 	}
 

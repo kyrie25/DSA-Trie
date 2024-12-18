@@ -40,7 +40,17 @@ const showToast = (message, type, icon) => {
 
 // Fetch dictionary data
 (async () => {
-	const rawDict = await fetch("words_alpha.txt").then((res) => res.text());
+	const rawDict = await fetch("words_alpha.txt")
+		.then((res) => res.text())
+		.catch((err) => {
+			console.error(err);
+			showToast("Failed to fetch dictionary data", "error", "bi-exclamation-circle");
+		});
+
+	if (!rawDict) {
+		return;
+	}
+
 	const dictionary = new Dictionary(rawDict);
 	dict.value = dictionary;
 	trie.value = new Trie(dictionary);
