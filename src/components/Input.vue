@@ -3,7 +3,7 @@
 		<label class="input input-bordered input-primary flex items-center gap-2">
 			<input type="text" class="grow" v-model="search" @input="handleInput" placeholder="Search for a word" />
 			<span class="ml-2">
-				<v-icon name="bi-search" />
+				<v-icon :name="search ? 'bi-x-lg' : 'bi-search'" @click="clear" :class="{ 'cursor-pointer': search }" />
 			</span>
 		</label>
 		<button class="btn btn-primary" @click="handleAdd">
@@ -37,7 +37,12 @@ export default {
 			emit("add", search.value);
 		};
 
-		return { search, handleInput, handleAdd };
+		const clear = () => {
+			search.value = "";
+			emit("update:modelValue", "");
+		};
+
+		return { search, handleInput, handleAdd, clear };
 	},
 };
 </script>

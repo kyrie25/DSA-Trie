@@ -13,12 +13,27 @@ import {
 	BiPlus,
 	BiInfoCircle,
 	BiPlusCircle,
+	BiXLg,
 	BiXCircle,
 	BiExclamationCircle,
 	OiGitCommit,
 } from "oh-vue-icons/icons";
 
-addIcons(BiSunFill, BiMoonFill, BiGithub, BiBook, BiSearch, BiTrash, BiPlus, BiInfoCircle, BiPlusCircle, BiXCircle, BiExclamationCircle, OiGitCommit);
+addIcons(
+	BiSunFill,
+	BiMoonFill,
+	BiGithub,
+	BiBook,
+	BiSearch,
+	BiTrash,
+	BiPlus,
+	BiInfoCircle,
+	BiPlusCircle,
+	BiXLg,
+	BiXCircle,
+	BiExclamationCircle,
+	OiGitCommit
+);
 
 const app = createApp(App);
 app.component("v-icon", OhVueIcon);
