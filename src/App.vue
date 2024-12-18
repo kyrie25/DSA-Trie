@@ -30,7 +30,11 @@ const time = ref(0);
 const showToast = (message, type, icon) => {
 	toasts.value.push({ message, type, icon });
 	setTimeout(() => {
-		toasts.value.shift();
+		const top = toasts.value[0];
+		top.animateOut = true;
+		setTimeout(() => {
+			toasts.value.shift();
+		}, 500);
 	}, 5000);
 };
 
@@ -105,6 +109,8 @@ const removeWord = (word) => {
 				'alert-success': toast.type === 'success',
 				'alert-error': toast.type === 'error',
 				'alert-warning': toast.type === 'warning',
+				'animate-toast-out': toast.animateOut,
+				'opacity-0': toast.animateOut,
 			}"
 		>
 			<v-icon v-if="toast.icon" :name="toast.icon" />
