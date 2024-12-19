@@ -6,10 +6,10 @@
 			<div
 				v-for="word in words"
 				:key="word"
-				class="flex items-center gap-4 p-4 border rounded-3xl shadow-md transition-all duration-300 hover:scale-105 hover:border-error"
+				class="group flex items-center gap-4 p-4 border rounded-3xl shadow-md transition-all duration-300 hover:scale-105 hover:border-error"
 			>
 				{{ word }}
-				<button @click="removeWord(word)" class="btn btn-sm btn-outline btn-error">
+				<button @click="removeWord(word)" class="btn btn-sm btn-ghost group-hover:btn-outline btn-error">
 					<v-icon name="bi-trash" />
 				</button>
 			</div>

@@ -16,6 +16,7 @@ import {
 	BiXLg,
 	BiXCircle,
 	BiExclamationCircle,
+	BiQuestionCircle,
 	OiGitCommit,
 } from "oh-vue-icons/icons";
 
@@ -32,6 +33,7 @@ addIcons(
 	BiXLg,
 	BiXCircle,
 	BiExclamationCircle,
+	BiQuestionCircle,
 	OiGitCommit
 );
 

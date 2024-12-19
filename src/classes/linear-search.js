@@ -4,14 +4,11 @@ export class LinearSearch {
 	}
 
 	add(value) {
-		this.array.push(value);
+		// Does nothing
 	}
 
 	remove(value) {
-		const index = this.array.indexOf(value);
-		if (index > -1) {
-			this.array.splice(index, 1);
-		}
+		// Does nothing
 	}
 
 	contains(value) {

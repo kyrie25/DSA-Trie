@@ -1,15 +1,23 @@
 export class Dictionary {
 	constructor(text) {
+		/**
+		 * @type {string[]}
+		 */
 		this.items = text.split("\n");
 	}
 
 	contains(word) {
-		word = word.toLowerCase();
-		return this.items.includes(word);
+		return this.items.some((item) => item.toLowerCase() === word.toLowerCase());
 	}
 
 	add(word) {
-		this.items.push(word);
+		// Add the word to the dictionary to its correct position
+		const index = this.items.findIndex((item) => item.toLowerCase() > word.toLowerCase());
+		if (index === -1) {
+			this.items.push(word);
+		} else {
+			this.items.splice(index, 0, word);
+		}
 	}
 
 	remove(word) {

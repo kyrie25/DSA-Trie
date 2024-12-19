@@ -92,6 +92,7 @@ const addWord = (word) => {
 		showToast(`Word "${word}" already exists`, "info", "bi-info-circle");
 		return;
 	}
+
 	dict.value.add(word);
 	trie.value.add(word);
 	linear.value.add(word);
