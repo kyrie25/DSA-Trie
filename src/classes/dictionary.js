@@ -7,7 +7,10 @@ export class Dictionary {
 	}
 
 	contains(word) {
-		return this.items.some((item) => item.toLowerCase() === word.toLowerCase());
+		return this.items.some((item) => {
+			if (item.toLowerCase() === word.toLowerCase()) console.log(item);
+			return item.toLowerCase() === word.toLowerCase();
+		});
 	}
 
 	add(word) {
