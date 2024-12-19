@@ -9,7 +9,7 @@
 		</div>
 		<div className="navbar-end space-x-4">
 			<!-- GitHub button-->
-			<a href="https://github.com/kyrie25/DSA-Trie" target="_blank" class="btn"><v-icon name="bi-github" /> GitHub </a>
+			<a href="https://github.com/kyrie25/DSA-Trie" target="_blank" class="btn"><v-icon name="bi-github" /> Source code </a>
 
 			<label className="grid cursor-pointer place-items-center">
 				<input

@@ -6,7 +6,7 @@
 				<v-icon :name="search ? 'bi-x-lg' : 'bi-search'" @click="clear" :class="{ 'cursor-pointer': search }" />
 			</span>
 		</label>
-		<div class="tooltip" data-tip="Add word to dictionary">
+		<div class="md:max-2xl:tooltip" data-tip="Add word to dictionary">
 			<button class="btn btn-primary" @click="handleAdd">
 				<v-icon name="bi-plus-circle" />
 			</button>

@@ -41,7 +41,12 @@ const showToast = (message, type, icon) => {
 // Fetch dictionary data
 (async () => {
 	const rawDict = await fetch("english-words/words.txt")
-		.then((res) => res.text())
+		.then((res) => {
+			if (!res.ok) {
+				throw new Error("Failed to fetch dictionary data");
+			}
+			return res.text();
+		})
 		.catch((err) => {
 			console.error(err);
 			showToast("Failed to fetch dictionary data", "error", "bi-exclamation-circle");
@@ -129,7 +134,7 @@ const removeWord = (word) => {
 		</div>
 	</div>
 	<Header />
-	<main class="flex flex-col min-h-[calc(100vh-76px-72px)] items-center relative">
+	<main class="flex flex-col min-h-[calc(100dvh-76px-72px)] items-center relative">
 		<div class="container mx-auto px-4 pt-5">
 			<div class="flex flex-col items-center justify-center gap-4">
 				<h1 class="text-4xl font-bold">Word Finder</h1>
