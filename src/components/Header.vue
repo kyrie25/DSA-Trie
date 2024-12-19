@@ -44,6 +44,11 @@ export default {
 				console.log(storedTheme);
 				document.documentElement.dataset.theme = storedTheme;
 				theme.value = storedTheme === "light";
+			} else {
+				// Follow system theme
+				const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+				document.documentElement.dataset.theme = systemTheme ? "dark" : "light";
+				theme.value = systemTheme;
 			}
 		});
 

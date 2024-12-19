@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-6 items-center max-w-80 mx-auto">
+	<div class="flex flex-col gap-6 items-center max-w-80 mx-auto select-none">
 		<div class="container">
 			<label class="text-sm font-semibold">Limit</label>
 			<input type="range" class="range range-secondary w-80 mt-1" min="20" max="100" step="20" v-model="value" @input="handleInput" />
