@@ -27,6 +27,9 @@ A live demo can be found [here](https://word-finder.kyrie25.dev/).
 ```bash
 git clone https://github.com/kyrie25/DSA-Trie.git
 cd DSA-Trie
+
+# Pull the English dictionary submodule
+git submodule update --init --recursive
 ```
 
 2. Install dependencies

@@ -40,7 +40,7 @@ const showToast = (message, type, icon) => {
 
 // Fetch dictionary data
 (async () => {
-	const rawDict = await fetch("words_alpha.txt")
+	const rawDict = await fetch("english-words/words.txt")
 		.then((res) => res.text())
 		.catch((err) => {
 			console.error(err);
