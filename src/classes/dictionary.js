@@ -6,16 +6,13 @@ export class Dictionary {
 		this.items = text.split("\n");
 	}
 
-	contains(word) {
-		return this.items.some((item) => {
-			if (item.toLowerCase() === word.toLowerCase()) console.log(item);
-			return item.toLowerCase() === word.toLowerCase();
-		});
+	contains(value) {
+		return this.items.includes(value);
 	}
 
 	add(word) {
 		// Add the word to the dictionary to its correct position
-		const index = this.items.findIndex((item) => item.toLowerCase() > word.toLowerCase());
+		const index = this.items.findIndex((item) => item > word);
 		if (index === -1) {
 			this.items.push(word);
 		} else {

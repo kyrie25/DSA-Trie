@@ -50,8 +50,6 @@ export class Trie {
 	}
 
 	contains(word) {
-		word = word.toLowerCase();
-
 		let current = this.root;
 
 		for (const char of word) {
@@ -65,8 +63,6 @@ export class Trie {
 	}
 
 	search(prefix, limit = 10) {
-		prefix = prefix.toLowerCase();
-
 		let current = this.root;
 		for (const char of prefix) {
 			if (!current.children[char]) {
