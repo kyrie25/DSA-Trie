@@ -3,7 +3,7 @@ export class Dictionary {
 		/**
 		 * @type {string[]}
 		 */
-		this.items = text.split("\n");
+		this.items = text.replaceAll("\r", "").split("\n").sort();
 	}
 
 	contains(value) {
