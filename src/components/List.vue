@@ -1,6 +1,9 @@
 <template>
 	<div class="container gap-4 mt-10">
-		<span v-if="words.length" class="text-gray-500"> {{ words.length }} words found in {{ time.toFixed(10) }}ms </span>
+		<span v-if="words.length" class="text-gray-500">
+			{{ words.length }} words found in <span class="font-bold">{{ time.toFixed(10) }}ms</span>,
+			<span class="font-bold">{{ comparisons }}</span> comparisons made</span
+		>
 		<div class="flex flex-wrap gap-4 mt-4">
 			<div v-if="!words.length && search.trim()" class="text-gray-500">No words found</div>
 			<div
@@ -22,6 +25,7 @@ export default {
 	name: "List",
 	props: {
 		words: Array,
+		comparisons: Number,
 		time: Number,
 		search: String,
 	},

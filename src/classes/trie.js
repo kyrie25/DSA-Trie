@@ -64,21 +64,25 @@ export class Trie {
 
 	search(prefix, limit = 10) {
 		let current = this.root;
+		let comparisons = 0;
+
 		for (const char of prefix) {
-			if (!current.children[char]) {
-				return [];
+			if (++comparisons && !current.children[char]) {
+				return { words: [], comparisons };
 			}
 			current = current.children[char];
 		}
 
 		const words = [];
-		this._findWords(current, prefix, words, limit);
-		return words;
+		comparisons += this._findWords(current, prefix, words, limit);
+		return { words, comparisons };
 	}
 
 	_findWords(node, prefix, words, limit) {
-		if (words.length >= limit) {
-			return;
+		let comparisons = 0;
+
+		if (++comparisons && words.length >= limit) {
+			return comparisons;
 		}
 
 		if (node.isEndOfWord) {
@@ -86,11 +90,13 @@ export class Trie {
 		}
 
 		for (const [char, child] of Object.entries(node.children)) {
-			this._findWords(child, prefix + char, words, limit);
-			if (words.length >= limit) {
-				return;
+			comparisons += this._findWords(child, prefix + char, words, limit);
+			if (++comparisons && words.length >= limit) {
+				return comparisons;
 			}
 		}
+
+		return comparisons;
 	}
 
 	get length() {

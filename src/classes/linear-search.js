@@ -23,17 +23,18 @@ export class LinearSearch {
 
 	search(value, limit = 10) {
 		const result = [];
+		let comparisons = 0;
 		for (const item of this.array) {
-			if (result.length >= limit) {
+			if (++comparisons && result.length >= limit) {
 				break;
 			}
 
-			if (item.startsWith(value)) {
+			if (++comparisons && item.startsWith(value)) {
 				result.push(item);
 			}
 		}
 
-		return result;
+		return { words: result, comparisons };
 	}
 
 	get length() {

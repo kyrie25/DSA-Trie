@@ -1,4 +1,6 @@
 <script setup>
+import { ref, watchEffect } from "vue";
+
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import InputBar from "./components/Input.vue";
@@ -7,8 +9,6 @@ import List from "./components/List.vue";
 
 import { Dictionary } from "./classes/dictionary";
 import { Trie } from "./classes/trie";
-
-import { ref, watchEffect } from "vue";
 import { LinearSearch } from "./classes/linear-search";
 
 // State
@@ -20,11 +20,14 @@ const search = ref("");
 const limit = ref(20);
 const mode = ref("trie");
 
-// Results
+// Classes
 const dict = ref(null);
 const trie = ref(null);
 const linear = ref(null);
+
+// Output
 const words = ref([]);
+const comparisons = ref(0);
 const time = ref(0);
 
 const showToast = (message, type, icon) => {
@@ -40,7 +43,7 @@ const showToast = (message, type, icon) => {
 
 // Fetch dictionary data
 (async () => {
-	const rawDict = await fetch("english-words/words.txt")
+	const rawDict = await fetch("english-words/words_alpha.txt")
 		.then((res) => {
 			if (!res.ok) {
 				throw new Error("Failed to fetch dictionary data");
@@ -61,29 +64,39 @@ const showToast = (message, type, icon) => {
 	trie.value = new Trie(dictionary);
 	linear.value = new LinearSearch(dictionary);
 	loading.value = false;
+
+	// Expose to window for debugging
+	window.Dictionary = dictionary;
+	window.Trie = trie.value;
+	window.LinearSearch = linear.value;
+
+	showToast(`Dictionary loaded, ${dictionary.length} words count`, "success", "bi-check-circle");
 })();
 
 watchEffect(() => {
 	console.log(limit.value, mode.value);
 	if (!search.value || !trie.value) {
 		words.value = [];
+		comparisons.value = 0;
 		return;
 	}
 
+	let res;
 	const startTime = performance.now();
 	switch (mode.value) {
-		case "trie":
-			words.value = trie.value.search(search.value.trim(), limit.value);
-			break;
 		case "linear":
-			words.value = linear.value.search(search.value.trim(), limit.value);
+			res = linear.value.search(search.value.trim(), limit.value);
 			break;
+		case "trie":
 		default:
-			words.value = trie.value.search(search.value.trim(), limit.value);
+			res = trie.value.search(search.value.trim(), limit.value);
 			break;
 	}
 	const endTime = performance.now();
 
+	// Update output
+	words.value = res.words;
+	comparisons.value = res.comparisons;
 	time.value = endTime - startTime;
 });
 
@@ -148,7 +161,7 @@ const removeWord = (word) => {
 					<span class="loading loading-spinner loading-lg" />
 				</div>
 				<!-- List words -->
-				<List v-else :words="words" :time="time" :search="search" @remove="removeWord" />
+				<List v-else :words="words" :comparisons="comparisons" :time="time" :search="search" @remove="removeWord" />
 			</div>
 		</div>
 	</main>
