@@ -22,6 +22,8 @@ export class LinearSearch {
 	}
 
 	search(value, limit = 10) {
+		value = value.toLowerCase();
+
 		const result = [];
 		let comparisons = 0;
 		for (const item of this.array) {

@@ -63,6 +63,8 @@ export class Trie {
 	}
 
 	search(prefix, limit = 10) {
+		prefix = prefix.toLowerCase();
+
 		let current = this.root;
 		let comparisons = 0;
 

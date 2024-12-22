@@ -6,6 +6,7 @@ import Footer from "./components/Footer.vue";
 import InputBar from "./components/Input.vue";
 import Filter from "./components/Filter.vue";
 import List from "./components/List.vue";
+import Benchmark from "./components/Benchmark.vue";
 
 import { Dictionary } from "./classes/dictionary";
 import { Trie } from "./classes/trie";
@@ -14,6 +15,7 @@ import { LinearSearch } from "./classes/linear-search";
 // State
 const loading = ref(true);
 const toasts = ref([]);
+const tab = ref("finder");
 
 // Input
 const search = ref("");
@@ -74,7 +76,7 @@ const showToast = (message, type, icon) => {
 })();
 
 watchEffect(() => {
-	console.log(limit.value, mode.value);
+	console.debug(limit.value, mode.value);
 	if (!search.value || !trie.value) {
 		words.value = [];
 		comparisons.value = 0;
@@ -125,6 +127,11 @@ const removeWord = (word) => {
 
 	showToast(`Word "${word}" removed`, "error", "bi-trash");
 };
+
+const toggleTab = (mode) => {
+	console.log("Toggle tab", mode);
+	tab.value = mode;
+};
 </script>
 
 <template>
@@ -153,15 +160,26 @@ const removeWord = (word) => {
 				<h1 class="text-4xl font-bold">Word Finder</h1>
 				<p class="text-lg">Simple word suggestion program that uses Trie and Linear Search algorithm.</p>
 
-				<InputBar v-model="search" @add="addWord" />
-
-				<Filter :limit="limit" :mode="mode" @update:limit="limit = $event" @update:mode="mode = $event" />
-
-				<div v-if="loading" class="mt-10">
-					<span class="loading loading-spinner loading-lg" />
+				<div role="tablist" class="tabs tabs-boxed">
+					<a role="tab" :class="{ tab: true, 'tab-active': tab === 'finder' }" @click="toggleTab('finder')">Word finder</a>
+					<a role="tab" :class="{ tab: true, 'tab-active': tab === 'test' }" @click="toggleTab('test')">Benchmark</a>
 				</div>
-				<!-- List words -->
-				<List v-else :words="words" :comparisons="comparisons" :time="time" :search="search" @remove="removeWord" />
+
+				<template v-if="tab === 'test'">
+					<Benchmark :dict="dict" :trie="trie" :linear="linear" />
+				</template>
+
+				<template v-if="tab === 'finder'">
+					<InputBar v-model="search" @add="addWord" />
+
+					<Filter :limit="limit" :mode="mode" @update:limit="limit = $event" @update:mode="mode = $event" />
+
+					<div v-if="loading" class="mt-10">
+						<span class="loading loading-spinner loading-lg" />
+					</div>
+					<!-- List words -->
+					<List v-else :words="words" :comparisons="comparisons" :time="time" :search="search" @remove="removeWord" />
+				</template>
 			</div>
 		</div>
 	</main>

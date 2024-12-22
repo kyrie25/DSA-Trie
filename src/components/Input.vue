@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-row items-center justify-center gap-4 w-full">
 		<label class="input input-bordered input-primary flex items-center gap-2">
-			<input type="text" class="grow" v-model="search" @input="handleInput" placeholder="Search (case-sensitive)" />
+			<input type="text" class="grow" v-model="search" @input="handleInput" placeholder="Look up a word..." />
 			<span class="ml-2">
 				<v-icon :name="search ? 'bi-x-lg' : 'bi-search'" @click="clear" :class="{ 'cursor-pointer': search }" />
 			</span>

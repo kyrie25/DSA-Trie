@@ -41,7 +41,7 @@ export default {
 		onMounted(() => {
 			const storedTheme = localStorage.getItem("theme");
 			if (storedTheme) {
-				console.log(storedTheme);
+				console.debug(storedTheme);
 				document.documentElement.dataset.theme = storedTheme;
 				theme.value = storedTheme === "light";
 			} else {

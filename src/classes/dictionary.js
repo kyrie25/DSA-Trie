@@ -3,7 +3,7 @@ export class Dictionary {
 		/**
 		 * @type {string[]}
 		 */
-		this.items = text.replaceAll("\r", "").split("\n").sort();
+		this.items = text.replaceAll("\r", "").split("\n");
 	}
 
 	contains(value) {
@@ -11,13 +11,7 @@ export class Dictionary {
 	}
 
 	add(word) {
-		// Add the word to the dictionary to its correct position
-		const index = this.items.findIndex((item) => item > word);
-		if (index === -1) {
-			this.items.push(word);
-		} else {
-			this.items.splice(index, 0, word);
-		}
+		this.items.push(word);
 	}
 
 	remove(word) {
