@@ -42,7 +42,7 @@
 					/>
 
 					<div class="label">
-						<span class="label-text-alt">L of the prefix</span>
+						<span class="label-text-alt">Length of the prefix</span>
 					</div>
 				</label>
 			</div>
