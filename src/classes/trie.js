@@ -141,6 +141,7 @@ export class Trie {
 		}
 
 		for (const [char, child] of Object.entries(node.children)) {
+			++comparisons; // This counts as a for loop comparison
 			comparisons += this._findWords(child, prefix + char, words, limit);
 			if (++comparisons && words.length >= limit) {
 				return comparisons;
