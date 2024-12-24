@@ -18,7 +18,7 @@
 			<label class="flex flex-row gap-4 cursor-pointer">
 				<span class="text-sm font-semibold">Trie</span>
 				<input v-model="mode" type="checkbox" class="toggle border-accent bg-accent hover:bg-accent" @change="handleToggle" />
-				<span class="text-sm font-semibold">Linear</span>
+				<span class="text-sm font-semibold">Ternary</span>
 			</label>
 		</div>
 	</div>
@@ -31,6 +31,7 @@ export default {
 	props: {
 		limit: Number,
 		mode: String,
+		modes: Object,
 	},
 	emits: ["update:limit", "update:mode"],
 	setup(props, { emit }) {
@@ -44,7 +45,8 @@ export default {
 		const mode = ref(props.mode);
 
 		const handleToggle = () => {
-			emit("update:mode", mode.value ? "linear" : "trie");
+			const modes = Object.keys(props.modes);
+			emit("update:mode", mode.value ? modes[0] : modes[1]);
 		};
 
 		return { value, handleInput, handleToggle, mode };

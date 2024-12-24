@@ -89,7 +89,7 @@ export default {
 	props: {
 		dict: Object,
 		trie: Object,
-		linear: Object,
+		ternary: Object,
 	},
 	setup(props) {
 		const loading = ref(false);
@@ -100,12 +100,11 @@ export default {
 
 		const results = ref([
 			{ mode: "Trie", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
-			{ mode: "Linear", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
+			{ mode: "Ternary", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
 		]);
 
 		const parse = (value, defaultValue) => {
 			const parsed = parseInt(value, 10);
-			console.log(parsed);
 			return isNaN(parsed) ? defaultValue : parsed;
 		};
 
@@ -128,7 +127,7 @@ export default {
 				const word = words[Math.floor(Math.random() * words.length)].substring(0, plength);
 
 				const startTime = performance.now();
-				const res = mode === "trie" ? props.trie.search(word, plimit) : props.linear.search(word, plimit);
+				const res = mode === "trie" ? props.trie.search(word, plimit) : props.ternary.search(word, plimit);
 				const endTime = performance.now();
 
 				time.push(endTime - startTime);
@@ -147,7 +146,7 @@ export default {
 		const clear = () => {
 			results.value = [
 				{ mode: "Trie", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
-				{ mode: "Linear", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
+				{ mode: "Ternary", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
 			];
 		};
 
@@ -164,7 +163,7 @@ export default {
 					...trieResults,
 				},
 				{
-					mode: "Linear",
+					mode: "Ternary",
 					avgTime: 0,
 					avgComparisons: 0,
 					medianTime: 0,
@@ -174,7 +173,7 @@ export default {
 
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 
-			const linearResults = test("linear");
+			const ternaryResults = test("ternary");
 
 			results.value = [
 				{
@@ -182,8 +181,8 @@ export default {
 					...trieResults,
 				},
 				{
-					mode: "Linear",
-					...linearResults,
+					mode: "Ternary",
+					...ternaryResults,
 				},
 			];
 

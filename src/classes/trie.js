@@ -1,19 +1,9 @@
-/**
- * Represents a node in a Trie (prefix tree).
- */
 class TrieNode {
-	/**
-	 * Creates an instance of TrieNode.
-	 */
 	constructor() {
 		this.children = {};
 		this.isEndOfWord = false;
 	}
 
-	/**
-	 * Adds a word to the Trie.
-	 * @param {string} word - The word to be added.
-	 */
 	add(word) {
 		if (word.length === 0) {
 			this.isEndOfWord = true;
@@ -28,10 +18,6 @@ class TrieNode {
 		this.children[firstChar].add(word.substring(1));
 	}
 
-	/**
-	 * Removes a word from the Trie.
-	 * @param {string} word - The word to be removed.
-	 */
 	remove(word) {
 		if (word.length === 0) {
 			this.isEndOfWord = false;
@@ -44,15 +30,7 @@ class TrieNode {
 		}
 	}
 }
-
-/**
- * Class representing a Trie data structure.
- */
 export class Trie {
-	/**
-	 * Create a Trie.
-	 * @param {import('./dictionary').Dictionary} dictionary - The dictionary object containing a list of words.
-	 */
 	constructor(dictionary) {
 		this.root = new TrieNode();
 		this.dictionary = dictionary;
@@ -62,27 +40,14 @@ export class Trie {
 		}
 	}
 
-	/**
-	 * Add a word to the Trie.
-	 * @param {string} word - The word to add.
-	 */
 	add(word) {
 		this.root.add(word);
 	}
 
-	/**
-	 * Remove a word from the Trie.
-	 * @param {string} word - The word to remove.
-	 */
 	remove(word) {
 		this.root.remove(word);
 	}
 
-	/**
-	 * Check if the Trie contains a word.
-	 * @param {string} word - The word to check.
-	 * @returns {boolean} True if the word is in the Trie, false otherwise.
-	 */
 	contains(word) {
 		let current = this.root;
 
@@ -96,12 +61,6 @@ export class Trie {
 		return current.isEndOfWord;
 	}
 
-	/**
-	 * Search for words in the Trie that start with a given prefix.
-	 * @param {string} prefix - The prefix to search for.
-	 * @param {number} [limit=10] - The maximum number of words to return.
-	 * @returns {Object} An object containing the list of words and the number of comparisons made.
-	 */
 	search(prefix, limit = 10) {
 		prefix = prefix.toLowerCase();
 
@@ -120,15 +79,6 @@ export class Trie {
 		return { words, comparisons };
 	}
 
-	/**
-	 * Recursively find words in the Trie starting from a given node.
-	 * @param {TrieNode} node - The current Trie node.
-	 * @param {string} prefix - The current prefix.
-	 * @param {string[]} words - The list of words found.
-	 * @param {number} limit - The maximum number of words to return.
-	 * @returns {number} The number of comparisons made.
-	 * @private
-	 */
 	_findWords(node, prefix, words, limit) {
 		let comparisons = 0;
 
@@ -151,18 +101,10 @@ export class Trie {
 		return comparisons;
 	}
 
-	/**
-	 * Get the number of words in the Trie.
-	 * @returns {number} The number of words in the Trie.
-	 */
 	get length() {
 		return this.dictionary.length;
 	}
 
-	/**
-	 * Check if the Trie is empty.
-	 * @returns {boolean} True if the Trie is empty, false otherwise.
-	 */
 	get isEmpty() {
 		return this.dictionary.isEmpty;
 	}

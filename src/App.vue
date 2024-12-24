@@ -10,22 +10,31 @@ import Benchmark from "./components/Benchmark.vue";
 
 import { Dictionary } from "./classes/dictionary";
 import { Trie } from "./classes/trie";
-import { LinearSearch } from "./classes/linear-search";
+import { TernarySearchTree } from "./classes/ternary-tree";
+
+const tabs = {
+	finder: "Word finder",
+	test: "Benchmark",
+};
+const modes = {
+	trie: "Trie",
+	ternary: "Ternary",
+};
 
 // State
 const loading = ref(true);
 const toasts = ref([]);
-const tab = ref("finder");
+const tab = ref(Object.keys(tabs)[0]);
 
 // Input
 const search = ref("");
 const limit = ref(20);
-const mode = ref("trie");
+const mode = ref(Object.keys(modes)[0]);
 
 // Classes
 const dict = ref(null);
 const trie = ref(null);
-const linear = ref(null);
+const ternary = ref(null);
 
 // Output
 const words = ref([]);
@@ -64,13 +73,13 @@ const showToast = (message, type, icon) => {
 	const dictionary = new Dictionary(rawDict);
 	dict.value = dictionary;
 	trie.value = new Trie(dictionary);
-	linear.value = new LinearSearch(dictionary);
+	ternary.value = new TernarySearchTree(dictionary);
 	loading.value = false;
 
 	// Expose to window for debugging
 	window.Dictionary = dictionary;
 	window.Trie = trie.value;
-	window.LinearSearch = linear.value;
+	window.TernarySearchTree = ternary.value;
 
 	showToast(`Dictionary loaded, ${dictionary.length} words count`, "success", "bi-check-circle");
 })();
@@ -86,8 +95,8 @@ watchEffect(() => {
 	let res;
 	const startTime = performance.now();
 	switch (mode.value) {
-		case "linear":
-			res = linear.value.search(search.value.trim(), limit.value);
+		case "ternary":
+			res = ternary.value.search(search.value.trim(), limit.value);
 			break;
 		case "trie":
 		default:
@@ -115,7 +124,7 @@ const addWord = (word) => {
 
 	dict.value.add(word);
 	trie.value.add(word);
-	linear.value.add(word);
+	ternary.value.add(word);
 
 	showToast(`Word "${word}" added`, "success", "bi-plus-circle");
 };
@@ -123,13 +132,12 @@ const addWord = (word) => {
 const removeWord = (word) => {
 	dict.value.remove(word);
 	trie.value.remove(word);
-	linear.value.remove(word);
+	ternary.value.remove(word);
 
 	showToast(`Word "${word}" removed`, "error", "bi-trash");
 };
 
 const toggleTab = (mode) => {
-	console.log("Toggle tab", mode);
 	tab.value = mode;
 };
 </script>
@@ -158,21 +166,22 @@ const toggleTab = (mode) => {
 		<div class="container mx-auto px-4 pt-5">
 			<div class="flex flex-col items-center justify-center gap-4">
 				<h1 class="text-4xl font-bold">Word Finder</h1>
-				<p class="text-lg">Simple word suggestion program that uses Trie and Linear Search algorithm.</p>
+				<p class="text-lg">Simple word suggestion program that uses Trie and Ternary Search Tree.</p>
 
 				<div role="tablist" class="tabs tabs-boxed">
-					<a role="tab" :class="{ tab: true, 'tab-active': tab === 'finder' }" @click="toggleTab('finder')">Word finder</a>
-					<a role="tab" :class="{ tab: true, 'tab-active': tab === 'test' }" @click="toggleTab('test')">Benchmark</a>
+					<a v-for="t in Object.keys(tabs)" :key="t" role="tab" :class="{ tab: true, 'tab-active': tab === t }" @click="toggleTab(t)">{{
+						tabs[t]
+					}}</a>
 				</div>
 
 				<template v-if="tab === 'test'">
-					<Benchmark :dict="dict" :trie="trie" :linear="linear" />
+					<Benchmark :dict="dict" :trie="trie" :ternary="ternary" />
 				</template>
 
 				<template v-if="tab === 'finder'">
 					<InputBar v-model="search" @add="addWord" />
 
-					<Filter :limit="limit" :mode="mode" @update:limit="limit = $event" @update:mode="mode = $event" />
+					<Filter :limit="limit" :modes="modes" :mode="mode" @update:limit="limit = $event" @update:mode="mode = $event" />
 
 					<div v-if="loading" class="mt-10">
 						<span class="loading loading-spinner loading-lg" />
