@@ -42,11 +42,11 @@ export default {
 			value.value = e.target.value;
 		};
 
-		const mode = ref(props.mode);
+		const mode = ref(props.mode === Object.keys(props.modes)[1]);
 
 		const handleToggle = () => {
 			const modes = Object.keys(props.modes);
-			emit("update:mode", mode.value ? modes[0] : modes[1]);
+			emit("update:mode", mode.value ? modes[1] : modes[0]);
 		};
 
 		return { value, handleInput, handleToggle, mode };

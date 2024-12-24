@@ -36,6 +36,10 @@ const dict = ref(null);
 const trie = ref(null);
 const ternary = ref(null);
 
+// State
+// const height = ref(0);
+// const nodes = ref(0);
+
 // Output
 const words = ref([]);
 const comparisons = ref(0);
@@ -71,9 +75,14 @@ const showToast = (message, type, icon) => {
 	}
 
 	const dictionary = new Dictionary(rawDict);
+
 	dict.value = dictionary;
 	trie.value = new Trie(dictionary);
 	ternary.value = new TernarySearchTree(dictionary);
+
+	// height.value = trie.value.height;
+	// nodes.value = trie.value.nodes;
+
 	loading.value = false;
 
 	// Expose to window for debugging
@@ -85,7 +94,6 @@ const showToast = (message, type, icon) => {
 })();
 
 watchEffect(() => {
-	console.debug(limit.value, mode.value);
 	if (!search.value || !trie.value) {
 		words.value = [];
 		comparisons.value = 0;
@@ -175,7 +183,7 @@ const toggleTab = (mode) => {
 				</div>
 
 				<template v-if="tab === 'test'">
-					<Benchmark :dict="dict" :trie="trie" :ternary="ternary" />
+					<Benchmark :loading="loading" :dict="dict" :trie="trie" :ternary="ternary" />
 				</template>
 
 				<template v-if="tab === 'finder'">

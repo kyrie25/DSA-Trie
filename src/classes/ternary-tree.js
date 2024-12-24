@@ -11,7 +11,6 @@ class TernaryTreeNode {
 export class TernarySearchTree {
 	constructor(dictionary) {
 		this.root = null;
-		this.dictionary = dictionary;
 
 		for (const word of dictionary.items) {
 			this.add(word);
@@ -113,15 +112,38 @@ export class TernarySearchTree {
 			return comparisons;
 		}
 
-		comparisons += this._collect(node.left, prefix, results, limit);
-
-		if (node.isEndOfWord) {
+		if (++comparisons && node.isEndOfWord && results.length < limit) {
 			results.push(prefix + node.character);
 		}
 
+		comparisons += this._collect(node.left, prefix, results, limit);
 		comparisons += this._collect(node.middle, prefix + node.character, results, limit);
 		comparisons += this._collect(node.right, prefix, results, limit);
 
 		return comparisons;
+	}
+
+	_height(node) {
+		if (node === null) {
+			return -1;
+		}
+
+		return 1 + Math.max(this._height(node.left), this._height(node.middle), this._height(node.right));
+	}
+
+	_countNodes(node) {
+		if (node === null) {
+			return 0;
+		}
+
+		return 1 + this._countNodes(node.left) + this._countNodes(node.middle) + this._countNodes(node.right);
+	}
+
+	get height() {
+		return this._height(this.root);
+	}
+
+	get nodes() {
+		return this._countNodes(this.root);
 	}
 }

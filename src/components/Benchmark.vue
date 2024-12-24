@@ -48,8 +48,8 @@
 			</div>
 		</div>
 		<div class="flex gap-4">
-			<button @click="benchmark" class="btn btn-primary" :disabled="loading">
-				<span v-if="loading" className="loading loading-spinner" />
+			<button @click="benchmark" :class="{ btn: true, 'btn-primary': true, 'cursor-not-allowed': running || loading }">
+				<span v-if="running" className="loading loading-spinner" />
 				Benchmark
 			</button>
 			<button @click="clear" class="btn btn-ghost">Clear</button>
@@ -87,12 +87,13 @@ import { ref } from "vue";
 export default {
 	name: "Benchmark",
 	props: {
+		loading: Boolean,
 		dict: Object,
 		trie: Object,
 		ternary: Object,
 	},
 	setup(props) {
-		const loading = ref(false);
+		const running = ref(false);
 
 		const total = ref(1000);
 		const limit = ref(10);
@@ -108,7 +109,7 @@ export default {
 			return isNaN(parsed) ? defaultValue : parsed;
 		};
 
-		const test = (mode = "trie") => {
+		const test = (mode = "trie", wordsUsed) => {
 			const words = props.dict.items;
 
 			const ptotal = parse(total.value, 1000);
@@ -124,7 +125,11 @@ export default {
 			let medianComparisons = 0;
 
 			for (let i = 0; i < ptotal; i++) {
-				const word = words[Math.floor(Math.random() * words.length)].substring(0, plength);
+				let word = wordsUsed[i];
+				if (!word) {
+					word = words[Math.floor(Math.random() * words.length)].substring(0, plength);
+					wordsUsed.push(word);
+				}
 
 				const startTime = performance.now();
 				const res = mode === "trie" ? props.trie.search(word, plimit) : props.ternary.search(word, plimit);
@@ -151,11 +156,15 @@ export default {
 		};
 
 		const benchmark = async () => {
-			loading.value = true;
+			if (running.value) return;
+			running.value = true;
 
 			clear();
 
-			const trieResults = test("trie");
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+
+			const words = [];
+			const trieResults = test("trie", words);
 
 			results.value = [
 				{
@@ -171,9 +180,9 @@ export default {
 				},
 			];
 
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+			await new Promise((resolve) => setTimeout(resolve, 100));
 
-			const ternaryResults = test("ternary");
+			const ternaryResults = test("ternary", words);
 
 			results.value = [
 				{
@@ -186,10 +195,10 @@ export default {
 				},
 			];
 
-			loading.value = false;
+			running.value = false;
 		};
 
-		return { total, limit, substrLength, benchmark, results, loading, clear };
+		return { total, limit, substrLength, benchmark, results, running, clear };
 	},
 };
 </script>

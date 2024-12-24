@@ -21,20 +21,24 @@ class TrieNode {
 	remove(word) {
 		if (word.length === 0) {
 			this.isEndOfWord = false;
-			return;
+			return Object.keys(this.children).length === 0; // Cleanup if no children
 		}
 
 		const firstChar = word[0];
 		if (this.children[firstChar]) {
-			this.children[firstChar].remove(word.substring(1));
+			const shouldDeleteChild = this.children[firstChar].remove(word.substring(1));
+			if (shouldDeleteChild) {
+				delete this.children[firstChar];
+			}
 		}
+
+		return !this.isEndOfWord && Object.keys(this.children).length === 0; // Cleanup if this node is no longer needed
 	}
 }
+
 export class Trie {
 	constructor(dictionary) {
 		this.root = new TrieNode();
-		this.dictionary = dictionary;
-
 		for (const word of dictionary.list) {
 			this.add(word);
 		}
@@ -82,30 +86,49 @@ export class Trie {
 	_findWords(node, prefix, words, limit) {
 		let comparisons = 0;
 
-		if (++comparisons && words.length >= limit) {
-			return comparisons;
-		}
-
 		if (node.isEndOfWord) {
 			words.push(prefix);
+			if (++comparisons && words.length >= limit) return comparisons;
 		}
 
-		for (const [char, child] of Object.entries(node.children)) {
-			++comparisons; // This counts as a for loop comparison
-			comparisons += this._findWords(child, prefix + char, words, limit);
-			if (++comparisons && words.length >= limit) {
-				return comparisons;
-			}
+		for (let i = 0, keys = Object.keys(node.children); ++comparisons && i < keys.length; i++) {
+			if (++comparisons && words.length >= limit) break;
+			comparisons += this._findWords(node.children[keys[i]], prefix + keys[i], words, limit);
 		}
 
 		return comparisons;
 	}
 
-	get length() {
-		return this.dictionary.length;
+	_height(node) {
+		if (node === null) {
+			return -1;
+		}
+
+		let height = -1;
+		for (const child of Object.values(node.children)) {
+			height = Math.max(height, this._height(child));
+		}
+
+		return height + 1;
 	}
 
-	get isEmpty() {
-		return this.dictionary.isEmpty;
+	get height() {
+		return this._height(this.root);
+	}
+
+	get nodes() {
+		const queue = [this.root];
+		let count = 0;
+
+		while (queue.length > 0) {
+			const node = queue.shift();
+			count++;
+
+			for (const child of Object.values(node.children)) {
+				queue.push(child);
+			}
+		}
+
+		return count;
 	}
 }
