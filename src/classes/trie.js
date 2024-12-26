@@ -1,6 +1,8 @@
 class TrieNode {
 	constructor() {
 		this.children = {};
+		// Avoid garbage collector by precalculating children array
+		this.childrenList = [];
 		this.isEndOfWord = false;
 	}
 
@@ -13,6 +15,7 @@ class TrieNode {
 		const firstChar = word[0];
 		if (!this.children[firstChar]) {
 			this.children[firstChar] = new TrieNode();
+			this.childrenList.push(firstChar);
 		}
 
 		this.children[firstChar].add(word.substring(1));
@@ -29,6 +32,7 @@ class TrieNode {
 			const shouldDeleteChild = this.children[firstChar].remove(word.substring(1));
 			if (shouldDeleteChild) {
 				delete this.children[firstChar];
+				this.childrenList = this.childrenList.filter(c => c !== firstChar);
 			}
 		}
 
@@ -91,9 +95,9 @@ export class Trie {
 			if (++comparisons && words.length >= limit) return comparisons;
 		}
 
-		for (let i = 0, keys = Object.keys(node.children); ++comparisons && i < keys.length; i++) {
+		for (let i = 0; ++comparisons && i < node.childrenList.length; i++) {
 			if (++comparisons && words.length >= limit) break;
-			comparisons += this._findWords(node.children[keys[i]], prefix + keys[i], words, limit);
+			comparisons += this._findWords(node.children[node.childrenList[i]], prefix + node.childrenList[i], words, limit);
 		}
 
 		return comparisons;
