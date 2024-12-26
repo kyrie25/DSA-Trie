@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, triggerRef, watchEffect } from "vue";
 
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
@@ -33,8 +33,10 @@ const mode = ref(Object.keys(modes)[0]);
 
 // Classes
 const dict = ref(null);
-const trie = ref(null);
-const ternary = ref(null);
+
+// Do not use ref for performance overhead
+let trie = null;
+let ternary = null;
 
 // State
 // const height = ref(0);
@@ -77,24 +79,24 @@ const showToast = (message, type, icon) => {
 	const dictionary = new Dictionary(rawDict);
 
 	dict.value = dictionary;
-	trie.value = new Trie(dictionary);
-	ternary.value = new TernarySearchTree(dictionary);
+	trie = new Trie(dictionary);
+	ternary = new TernarySearchTree(dictionary);
 
-	// height.value = trie.value.height;
-	// nodes.value = trie.value.nodes;
+	// height.value = trie.height;
+	// nodes.value = trie.nodes;
 
 	loading.value = false;
 
 	// Expose to window for debugging
 	window.Dictionary = dictionary;
-	window.Trie = trie.value;
-	window.TernarySearchTree = ternary.value;
+	window.Trie = trie;
+	window.TernarySearchTree = ternary;
 
 	showToast(`Dictionary loaded, ${dictionary.length} words count`, "success", "bi-check-circle");
 })();
 
-watchEffect(() => {
-	if (!search.value || !trie.value) {
+const findWord = () => {
+	if (!search.value || !trie) {
 		words.value = [];
 		comparisons.value = 0;
 		return;
@@ -104,11 +106,11 @@ watchEffect(() => {
 	const startTime = performance.now();
 	switch (mode.value) {
 		case "ternary":
-			res = ternary.value.search(search.value.trim(), limit.value);
+			res = ternary.search(search.value.trim(), limit.value);
 			break;
 		case "trie":
 		default:
-			res = trie.value.search(search.value.trim(), limit.value);
+			res = trie.search(search.value.trim(), limit.value);
 			break;
 	}
 	const endTime = performance.now();
@@ -117,7 +119,7 @@ watchEffect(() => {
 	words.value = res.words;
 	comparisons.value = res.comparisons;
 	time.value = endTime - startTime;
-});
+}
 
 const addWord = (word) => {
 	if (!word) {
@@ -131,16 +133,20 @@ const addWord = (word) => {
 	}
 
 	dict.value.add(word);
-	trie.value.add(word);
-	ternary.value.add(word);
+	trie.add(word);
+	ternary.add(word);
+
+	findWord();
 
 	showToast(`Word "${word}" added`, "success", "bi-plus-circle");
 };
 
 const removeWord = (word) => {
 	dict.value.remove(word);
-	trie.value.remove(word);
-	ternary.value.remove(word);
+	trie.remove(word);
+	ternary.remove(word);
+
+	findWord();
 
 	showToast(`Word "${word}" removed`, "error", "bi-trash");
 };
@@ -148,6 +154,8 @@ const removeWord = (word) => {
 const toggleTab = (mode) => {
 	tab.value = mode;
 };
+
+watchEffect(findWord);
 </script>
 
 <template>
