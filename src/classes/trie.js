@@ -32,7 +32,7 @@ class TrieNode {
 			const shouldDeleteChild = this.children[firstChar].remove(word.substring(1));
 			if (shouldDeleteChild) {
 				delete this.children[firstChar];
-				this.childrenList = this.childrenList.filter(c => c !== firstChar);
+				this.childrenList = this.childrenList.filter((c) => c !== firstChar);
 			}
 		}
 
@@ -116,23 +116,24 @@ export class Trie {
 		return height + 1;
 	}
 
+	_countNodes(node) {
+		if (node === null) {
+			return 0;
+		}
+
+		let count = 1;
+		for (const child of Object.values(node.children)) {
+			count += this._countNodes(child);
+		}
+
+		return count;
+	}
+
 	get height() {
 		return this._height(this.root);
 	}
 
 	get nodes() {
-		const queue = [this.root];
-		let count = 0;
-
-		while (queue.length > 0) {
-			const node = queue.shift();
-			count++;
-
-			for (const child of Object.values(node.children)) {
-				queue.push(child);
-			}
-		}
-
-		return count;
+		return this._countNodes(this.root);
 	}
 }
