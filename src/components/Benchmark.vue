@@ -180,7 +180,7 @@ export default {
 				},
 			];
 
-			await new Promise((resolve) => setTimeout(resolve, 100));
+			await new Promise((resolve) => setTimeout(resolve, 50));
 
 			const ternaryResults = test("ternary", words);
 

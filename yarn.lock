@@ -2298,7 +2298,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/70c4e9f96ceebc7aa3c4e4680358a014f8149f1808e669999055d073f8a6e09ad78621dc8121fe3d61a73dd36515f03884f031ad7140306355618e3f9a0e70f7
+  checksum: 10c0/4bbb5caf3f04fed933b01c100804f3693ff902984a3152ea1359a972264fa3240f6551d32f0163a79c64df3715b4d6691818c9f652cdd41b2473c69e2b0a373d
   languageName: node
   linkType: hard
 
