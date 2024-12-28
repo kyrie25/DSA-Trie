@@ -1,8 +1,8 @@
 <template>
-	<div class="container flex flex-wrap flex-col justify-center items-center text-center gap-4">
+	<div class="container flex flex-col justify-center items-center text-center gap-4">
 		<!-- Config -->
-		<div class="flex flex-row justify-center gap-6 w-full">
-			<div>
+		<div class="flex flex-row max-sm:flex-col justify-center items-center gap-4 max-sm:gap-2 w-full">
+			<div class="flex flex-col justify-center items-center gap-4 max-sm:w-fit">
 				<label class="form-control w-full max-w-xs">
 					<div class="label">
 						<span class="label-text">Total</span>
@@ -14,7 +14,7 @@
 				</label>
 			</div>
 
-			<div>
+			<div class="flex flex-col justify-center items-center gap-4 max-sm:w-fit">
 				<label class="form-control w-full max-w-xs">
 					<div class="label">
 						<span class="label-text">Limit</span>
@@ -26,7 +26,7 @@
 				</label>
 			</div>
 
-			<div>
+			<div class="flex flex-col justify-center items-center gap-4 max-sm:w-fit">
 				<label class="form-control w-full max-w-xs">
 					<div class="label">
 						<span class="label-text">String length</span>
@@ -57,9 +57,9 @@
 
 		<!-- Results -->
 		<div class="overflow-x-auto">
-			<table class="table w-full">
+			<table class="table table-zebra w-full">
 				<thead>
-					<tr class="">
+					<tr>
 						<th>Mode</th>
 						<th>Average Time (ms)</th>
 						<th>Average Comparisons</th>
