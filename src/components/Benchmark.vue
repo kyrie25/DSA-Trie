@@ -100,8 +100,8 @@ export default {
 		const substrLength = ref(3);
 
 		const results = ref([
-			{ mode: "Trie", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
-			{ mode: "Ternary", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
+			{ mode: "Trie", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0, callback: props.trie.search.bind(props.trie) },
+			{ mode: "Ternary", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0, callback: props.ternary.search.bind(props.ternary) },
 		]);
 
 		const parse = (value, defaultValue) => {
@@ -109,7 +109,7 @@ export default {
 			return isNaN(parsed) ? defaultValue : parsed;
 		};
 
-		const test = (mode = "trie", wordsUsed) => {
+		const test = (mode = {}, wordsUsed) => {
 			const words = props.dict.items;
 
 			const ptotal = parse(total.value, 1000);
@@ -119,11 +119,6 @@ export default {
 			let comparisons = [];
 			let time = [];
 
-			let avgTime = 0;
-			let avgComparisons = 0;
-			let medianTime = 0;
-			let medianComparisons = 0;
-
 			for (let i = 0; i < ptotal; i++) {
 				let word = wordsUsed[i];
 				if (!word) {
@@ -132,27 +127,28 @@ export default {
 				}
 
 				const startTime = performance.now();
-				const res = mode === "trie" ? props.trie.search(word, plimit) : props.ternary.search(word, plimit);
+				const res = mode.callback(word, plimit);
 				const endTime = performance.now();
 
 				time.push(endTime - startTime);
 				comparisons.push(res.comparisons);
 			}
 
-			avgTime = time.reduce((a, b) => a + b, 0) / ptotal;
-			avgComparisons = comparisons.reduce((a, b) => a + b, 0) / ptotal;
+			mode.avgTime = time.reduce((a, b) => a + b, 0) / ptotal;
+			mode.avgComparisons = comparisons.reduce((a, b) => a + b, 0) / ptotal;
 
-			medianTime = time.sort((a, b) => a - b)[Math.floor(ptotal / 2)];
-			medianComparisons = comparisons.sort((a, b) => a - b)[Math.floor(ptotal / 2)];
-
-			return { avgTime, avgComparisons, medianTime, medianComparisons };
+			mode.medianTime = time.sort((a, b) => a - b)[Math.floor(ptotal / 2)];
+			mode.medianComparisons = comparisons.sort((a, b) => a - b)[Math.floor(ptotal / 2)];
 		};
 
 		const clear = () => {
-			results.value = [
-				{ mode: "Trie", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
-				{ mode: "Ternary", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0 },
-			];
+			results.value.forEach((result) => {
+				result.avgTime = 0;
+				result.avgComparisons = 0;
+				result.medianTime = 0;
+				result.medianComparisons = 0;
+				return result;
+			});
 		};
 
 		const benchmark = async () => {
@@ -160,40 +156,14 @@ export default {
 			running.value = true;
 
 			clear();
-
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+			await new Promise((resolve) => setTimeout(resolve, 10));
 
 			const words = [];
-			const trieResults = test("trie", words);
 
-			results.value = [
-				{
-					mode: "Trie",
-					...trieResults,
-				},
-				{
-					mode: "Ternary",
-					avgTime: 0,
-					avgComparisons: 0,
-					medianTime: 0,
-					medianComparisons: 0,
-				},
-			];
-
-			await new Promise((resolve) => setTimeout(resolve, 50));
-
-			const ternaryResults = test("ternary", words);
-
-			results.value = [
-				{
-					mode: "Trie",
-					...trieResults,
-				},
-				{
-					mode: "Ternary",
-					...ternaryResults,
-				},
-			];
+			for (const mode in results.value) {
+				test(results.value[mode], words);
+				await new Promise((resolve) => setTimeout(resolve, 50));
+			}
 
 			running.value = false;
 		};
