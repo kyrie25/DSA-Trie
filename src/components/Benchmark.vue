@@ -177,7 +177,8 @@ export default {
 			log.value += `Limit: ${plimit}\n`;
 			log.value += `Total: ${ptotal}\n`;
 			log.value += `Time: ${JSON.stringify(time)}\n`;
-			log.value += `Comparisons: ${JSON.stringify(comparisons)}\n\n`;
+			log.value += `Comparisons: ${JSON.stringify(comparisons)}\n`;
+			log.value += `Total time taken: ${time.reduce((a, b) => a + b, 0)}ms\n\n`;
 
 			console.log(mode.mode, plimit, ptotal, time, comparisons);
 		};
