@@ -78,11 +78,28 @@
 				</tbody>
 			</table>
 		</div>
+
+		<!-- Log -->
+		<div class="mockup-code w-full overflow-x-auto">
+			<pre
+				v-if="sanitizedLog.length > 1"
+				v-for="line in sanitizedLog"
+				:key="line"
+				:data-prefix="line.trim() ? '>' : ''"
+				:class="{
+					'text-left': true,
+					'text-info': !line.includes(':'),
+					'bg-success text-success-content': line.includes('completed'),
+				}"
+				>{{ line }}</pre
+			>
+			<pre v-else class="text-left text-warning" data-prefix=">">No logs available</pre>
+		</div>
 	</div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 export default {
 	name: "Benchmark",
@@ -99,9 +116,20 @@ export default {
 		const limit = ref(10);
 		const substrLength = ref(3);
 
+		const log = ref("");
+
+		const sanitizedLog = computed(() => log.value.trim().split("\n"));
+
 		const results = ref([
 			{ mode: "Trie", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0, callback: props.trie.search.bind(props.trie) },
-			{ mode: "Ternary", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0, callback: props.ternary.search.bind(props.ternary) },
+			{
+				mode: "Ternary Search Tree",
+				avgTime: 0,
+				avgComparisons: 0,
+				medianTime: 0,
+				medianComparisons: 0,
+				callback: props.ternary.search.bind(props.ternary),
+			},
 		]);
 
 		const parse = (value, defaultValue) => {
@@ -134,8 +162,6 @@ export default {
 				comparisons.push(res.comparisons);
 			}
 
-			console.log(mode.mode, plimit, time, comparisons);
-
 			mode.avgTime = time.reduce((a, b) => a + b, 0) / ptotal;
 			mode.avgComparisons = comparisons.reduce((a, b) => a + b, 0) / ptotal;
 
@@ -146,6 +172,14 @@ export default {
 				mode.medianTime = [...time].sort((a, b) => a - b)[Math.floor(ptotal / 2)];
 				mode.medianComparisons = [...comparisons].sort((a, b) => a - b)[Math.floor(ptotal / 2)];
 			}
+
+			log.value += `${mode.mode}\n`;
+			log.value += `Limit: ${plimit}\n`;
+			log.value += `Total: ${ptotal}\n`;
+			log.value += `Time: ${JSON.stringify(time)}\n`;
+			log.value += `Comparisons: ${JSON.stringify(comparisons)}\n\n`;
+
+			console.log(mode.mode, plimit, ptotal, time, comparisons);
 		};
 
 		const clear = () => {
@@ -156,6 +190,8 @@ export default {
 				result.medianComparisons = 0;
 				return result;
 			});
+
+			log.value = "";
 		};
 
 		const benchmark = async () => {
@@ -172,10 +208,12 @@ export default {
 				await new Promise((resolve) => setTimeout(resolve, 50));
 			}
 
+			log.value += "Benchmark completed, result logged to browser console\n";
+
 			running.value = false;
 		};
 
-		return { total, limit, substrLength, benchmark, results, running, clear };
+		return { total, limit, substrLength, benchmark, results, sanitizedLog, running, clear };
 	},
 };
 </script>

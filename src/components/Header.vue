@@ -30,7 +30,7 @@ import { onMounted, ref } from "vue";
 export default {
 	name: "Header",
 	setup() {
-		let theme = ref(false);
+		let theme = ref(true);
 		const toggleTheme = () => {
 			const value = theme.value ? "light" : "dark";
 			// Add data tag to HTML
@@ -48,7 +48,7 @@ export default {
 				// Follow system theme
 				const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 				document.documentElement.dataset.theme = systemTheme ? "dark" : "light";
-				theme.value = systemTheme;
+				theme.value = !systemTheme;
 			}
 		});
 
