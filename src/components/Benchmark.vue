@@ -134,7 +134,7 @@ export default {
 				comparisons.push(res.comparisons);
 			}
 
-			console.log(mode.mode, time, comparisons);
+			console.log(mode.mode, plimit, time, comparisons);
 
 			mode.avgTime = time.reduce((a, b) => a + b, 0) / ptotal;
 			mode.avgComparisons = comparisons.reduce((a, b) => a + b, 0) / ptotal;
