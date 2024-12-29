@@ -139,8 +139,13 @@ export default {
 			mode.avgTime = time.reduce((a, b) => a + b, 0) / ptotal;
 			mode.avgComparisons = comparisons.reduce((a, b) => a + b, 0) / ptotal;
 
-			mode.medianTime = time.sort((a, b) => a - b)[Math.floor(ptotal / 2)];
-			mode.medianComparisons = comparisons.sort((a, b) => a - b)[Math.floor(ptotal / 2)];
+			if (Array.prototype.toSorted) {
+				mode.medianTime = time.toSorted((a, b) => a - b)[Math.floor(ptotal / 2)];
+				mode.medianComparisons = comparisons.toSorted((a, b) => a - b)[Math.floor(ptotal / 2)];
+			} else {
+				mode.medianTime = [...time].sort((a, b) => a - b)[Math.floor(ptotal / 2)];
+				mode.medianComparisons = [...comparisons].sort((a, b) => a - b)[Math.floor(ptotal / 2)];
+			}
 		};
 
 		const clear = () => {
