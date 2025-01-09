@@ -2,6 +2,8 @@
  * Class representing a Dictionary.
  */
 export class Dictionary {
+	name = "Dictionary";
+
 	constructor(text) {
 		this.items = text.replaceAll("\r", "").split("\n");
 		this.shuffle();

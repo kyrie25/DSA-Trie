@@ -41,6 +41,8 @@ class TrieNode {
 }
 
 export class Trie {
+	name = "Trie";
+
 	constructor(dictionary) {
 		this.root = new TrieNode();
 		for (const word of dictionary.list) {

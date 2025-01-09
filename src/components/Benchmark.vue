@@ -106,8 +106,7 @@ export default {
 	props: {
 		loading: Boolean,
 		dict: Object,
-		trie: Object,
-		ternary: Object,
+		algorithms: Array,
 	},
 	setup(props) {
 		const running = ref(false);
@@ -120,17 +119,16 @@ export default {
 
 		const sanitizedLog = computed(() => log.value.trim().split("\n"));
 
-		const results = ref([
-			{ mode: "Trie", avgTime: 0, avgComparisons: 0, medianTime: 0, medianComparisons: 0, callback: props.trie.search.bind(props.trie) },
-			{
-				mode: "Ternary Search Tree",
+		const results = ref(
+			props.algorithms.map((algorithm) => ({
+				mode: algorithm.name,
 				avgTime: 0,
 				avgComparisons: 0,
 				medianTime: 0,
 				medianComparisons: 0,
-				callback: props.ternary.search.bind(props.ternary),
-			},
-		]);
+				callback: algorithm.search.bind(algorithm),
+			}))
+		);
 
 		const parse = (value, defaultValue) => {
 			const parsed = parseInt(value, 10);

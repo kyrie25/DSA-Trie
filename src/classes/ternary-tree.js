@@ -9,6 +9,8 @@ class TernaryTreeNode {
 }
 
 export class TernarySearchTree {
+	name = "Ternary Search Tree";
+
 	constructor(dictionary) {
 		this.root = null;
 

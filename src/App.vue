@@ -119,7 +119,7 @@ const findWord = () => {
 	words.value = res.words;
 	comparisons.value = res.comparisons;
 	time.value = endTime - startTime;
-}
+};
 
 const addWord = (word) => {
 	if (!word) {
@@ -191,7 +191,7 @@ watchEffect(findWord);
 				</div>
 
 				<template v-if="tab === 'test'">
-					<Benchmark :loading="loading" :dict="dict" :trie="trie" :ternary="ternary" />
+					<Benchmark :loading="loading" :dict="dict" :algorithms="[trie, ternary]" />
 				</template>
 
 				<template v-if="tab === 'finder'">
